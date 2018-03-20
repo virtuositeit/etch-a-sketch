@@ -30,7 +30,9 @@ http.listen(serverPort, function() {
 io.on('connect', function(socket) {
   console.log('a user connected');
 
-
+ io.emit('new-pos',[10,150]);
+ io.emit('new-pos',[150,150]);
+ io.emit('new-pos',[150,10]);
 // if you get the 'disconnect' message, say the user disconnected
   socket.on('disconnect', function() {
     console.log('user disconnected');
