@@ -5,8 +5,8 @@ var app = express(); // webapp
 var http = require('http').Server(app); // connects http library to server
 var io = require('socket.io')(http); // connect websocket library to server
 var serverPort = 8000;
-var SerialPort = require('serialport'); // serial library
-var Readline = SerialPort.parsers.Readline; // read serial data as lines
+var serialPort = require('serialport'); // serial library
+var readLine = serialPort.parsers.Readline; // read serial data as lines
 
 //---------------------- WEBAPP SERVER SETUP ---------------------------------//
 // use express to create the simple webapp
@@ -33,7 +33,7 @@ const parser = new readLine({
 // Read data that is available on the serial port and send it to the websocket
 serial.pipe(parser);
 parser.on('data', function(data) {
-  console.log('Data:', data);
+//  console.log('Data:', data);
   if(data=='rst'){
     io.emit('reset');
   }else{

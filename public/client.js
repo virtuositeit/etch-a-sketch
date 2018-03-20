@@ -7,7 +7,7 @@ var ctx = Sketch.create();
 var firstMessage=true;
 
     ctx.container = document.getElementById( 'container' ),
-
+    offset=[ctx.width/2,ctx.height/2];
     ctx.autoclear= false;
 
     ctx.retina='auto';
@@ -20,30 +20,25 @@ var firstMessage=true;
       firstMessage=true;
       ctx.clear();
     });
-    console.log(ctx.width);
-
+  //  console.log('width'+ctx.width);
+  //  console.log('height'+ctx.height);
     socket.on('new-pos', function(newPosition) {
 
-      newPosition[0] = newPosition[0].map(0,1023,con,);
-      newPosition[1] = newPosition[1].map(0,1023,,);
+      newPosition[0] = map(newPosition[0],0,1023,0,ctx.width);
+      newPosition[1] = map(newPosition[1],0,1023,0,ctx.height);
+
       if(firstMessage){
         firstMessage=false;
-        offset=newPosition;
-
-
+        previousPosition=newPosition;
       }else{
-      console.log("start at "+newPosition);
-         //while(working){console.log("waiting");}
-
-          console.log('from'+ previousPosition+'to' +newPosition);
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          ctx.fillStyle = ctx.strokeStyle = COLOUR;
-          ctx.lineWidth = radius;
-          ctx.beginPath();
-          ctx.moveTo( previousPosition[0]-offset[0], previousPosition[1]-offset[1] );
-          ctx.lineTo( newPosition[0]-offset[0], newPosition[1] -offset[1]);
-          ctx.stroke();
-          previousPosition=newPosition;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.fillStyle = ctx.strokeStyle = COLOUR;
+        ctx.lineWidth = radius;
+        ctx.beginPath();
+        ctx.moveTo( previousPosition[0], previousPosition[1] );
+        ctx.lineTo( newPosition[0], newPosition[1]);
+        ctx.stroke();
+        previousPosition=newPosition;
        }
     });
