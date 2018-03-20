@@ -7,9 +7,6 @@ var io = require('socket.io')(http); // connect websocket library to server
 var serverPort = 8000;
 
 
-var fs = require('fs');
-fs.createReadStream('node_modules/sketch-js/js/sketch.min.js').pipe(fs.createWriteStream('public/sketch.min.js'));
-
 
 
 
