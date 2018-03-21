@@ -1,4 +1,3 @@
-var filePath = "../dataBase.csv" //file path to the dataBase
 
 var express = require('express'); // web server application
 var app = express(); // webapp
@@ -32,11 +31,10 @@ const parser = new readLine({
 
 // Read data that is available on the serial port and send it to the websocket
 serial.pipe(parser);
-parser.on('data', function(data) {
-//  console.log('Data:', data);
-  if(data=='rst'){
+parser.on('data', function(data) { // on data from the arduino
+  if(data=='rst'){  // if its the 'rst' string call reset
     io.emit('reset');
-  }else{
+  }else{ // any other data we try to forward by spliting it
     var transmitData = [data.split(',')[0],data.split(',')[1]];
     io.emit('new-pos', transmitData);
   }
@@ -49,12 +47,7 @@ parser.on('data', function(data) {
 // as long as someone is connected, listen for messages
 io.on('connect', function(socket) {
   console.log('a user connected');
-  io.emit('reset');
-// io.emit('new-pos',[10,10]);
-// io.emit('new-pos',[10,150]);
-// io.emit('new-pos',[150,150]);
-// io.emit('new-pos',[150,10]);
-// io.emit('new-pos',[10,10]);
+  io.emit('reset'); // call reset to make sure the website is clean
 
 // if you get the 'disconnect' message, say the user disconnected
   io.on('disconnect', function() {

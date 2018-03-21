@@ -1,44 +1,36 @@
-var COLOUR =  '#505050';
-var radius = 3;
-var socket = io();
-var previousPosition=[0,0];
-var offset=[0,0];
-var ctx = Sketch.create();
-var firstMessage=true;
+var COLOUR =  '#505050';  // This is the drawing color
+var radius = 3;           // Constant radio for the line
+var socket = io();        // websocket to the server
+var previousPosition=[0,0]; // previous position to draw a line from
+var ctx = Sketch.create(); //Creating the drawing context
+var firstMessage=true;    // What the first message, to start on the first value
 
-    ctx.container = document.getElementById( 'container' ),
-    offset=[ctx.width/2,ctx.height/2];
-    ctx.autoclear= false;
-
+    ctx.container = document.getElementById( 'container' ); //reference drawing canvas
+    ctx.autoclear= false; // making sure it stays
     ctx.retina='auto';
+    ctx.setup = function() { console.log( 'setup' );} // Setup all variables
+    ctx.keydown= function() { if ( ctx.keys.C ) ctx.clear();} // handeling keydowns
 
-    ctx.setup = function() { console.log( 'setup' );}
-
-    ctx.keydown= function() { if ( ctx.keys.C ) ctx.clear();}
-
-    socket.on('reset', function() {
+    socket.on('reset', function() { // on a 'reset' message clean and reste firstMessage
       firstMessage=true;
       ctx.clear();
     });
-  //  console.log('width'+ctx.width);
-  //  console.log('height'+ctx.height);
-    socket.on('new-pos', function(newPosition) {
 
-      newPosition[0] = map(newPosition[0],0,1023,0,ctx.width);
-      newPosition[1] = map(newPosition[1],0,1023,0,ctx.height);
-
-      if(firstMessage){
+    socket.on('new-pos', function(newPosition) { // handling new sensor values
+      newPosition[0] = map(newPosition[0],0,1023,0,ctx.width); // maping the 10 bit depth to the screen width
+      newPosition[1] = map(newPosition[1],0,1023,0,ctx.height);// maping the 10 bit depth to the screen height
+      if(firstMessage){ // if its the first message store that value as previous
         firstMessage=false;
         previousPosition=newPosition;
-      }else{
+      }else{ // any other message we use to draw.
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.fillStyle = ctx.strokeStyle = COLOUR;
         ctx.lineWidth = radius;
-        ctx.beginPath();
-        ctx.moveTo( previousPosition[0], previousPosition[1] );
-        ctx.lineTo( newPosition[0], newPosition[1]);
-        ctx.stroke();
-        previousPosition=newPosition;
+        ctx.beginPath();  //begin a adrawing
+        ctx.moveTo( previousPosition[0], previousPosition[1] ); // from
+        ctx.lineTo( newPosition[0], newPosition[1]); // to
+        ctx.stroke(); // and only draw a stroke
+        previousPosition=newPosition; // update to the new position.
        }
     });
