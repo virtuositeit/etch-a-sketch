@@ -17,8 +17,10 @@ var firstMessage=true;    // What the first message, to start on the first value
     });
 
     socket.on('new-pos', function(newPosition) { // handling new sensor values
-      newPosition[0] = map(newPosition[0],0,1023,0,ctx.width); // maping the 10 bit depth to the screen width
-      newPosition[1] = map(newPosition[1],0,1023,0,ctx.height);// maping the 10 bit depth to the screen height
+
+      //TODO: Map the incoming 10-bit numbers to the height and width of the screen.
+      // See https://github.com/soulwire/sketch.js/wiki/API for sketch references
+
       if(firstMessage){ // if its the first message store that value as previous
         firstMessage=false;
         previousPosition=newPosition;
@@ -29,7 +31,7 @@ var firstMessage=true;    // What the first message, to start on the first value
         ctx.lineWidth = radius;
         ctx.beginPath();  //begin a adrawing
         ctx.moveTo( previousPosition[0], previousPosition[1] ); // from
-        ctx.lineTo( newPosition[0], newPosition[1]); // to
+        ctx.lineTo( newPosition[0],  newPosition[1]); // to
         ctx.stroke(); // and only draw a stroke
         previousPosition=newPosition; // update to the new position.
        }
