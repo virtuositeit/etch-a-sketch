@@ -1,9 +1,26 @@
 var COLOUR =  '#505050';  // This is the drawing color
-var radius = 3;           // Constant radio for the line
+var radius = 9;           // Constant radio for the line
 var socket = io();        // websocket to the server
 var previousPosition=[0,0]; // previous position to draw a line from
 var ctx = Sketch.create(); //Creating the drawing context
 var firstMessage=true;    // What the first message, to start on the first value
+
+var colorButtons = document.getElementsByClassName('color');
+for (var button of colorButtons) {
+  button.addEventListener('click', () => {
+    COLOUR = event.currentTarget.style.backgroundColor;
+  }, false);
+}
+  
+var strokeButtons = document.getElementsByClassName('stroke');
+for (var button of strokeButtons) {
+  button.addEventListener('click', () => {
+    let buttonWidth = event.currentTarget.style.width.split('px')[0];
+    console.log(buttonWidth)
+    radius = (parseInt(buttonWidth) *  3 / 20) ** 2
+    console.log(radius)
+  }, false);
+}
 
     ctx.container = document.getElementById( 'container' ); //reference drawing canvas
     ctx.autoclear= false; // making sure it stays
